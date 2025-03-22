@@ -1,6 +1,10 @@
 * {
-    font-family: cursive;
+    font-family: sans-serif;
     
+}
+
+.fonte {
+    font-family: Verdana, Geneva, Tahoma, sans-serif
 }
 
 body {

@@ -2,3 +2,16 @@
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     background-color: rgb(212, 213, 214);
 }
+
+.bots {
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.links {
+    margin-left: 15px;
+    text-decoration: none;
+    color:#7742da
+}
