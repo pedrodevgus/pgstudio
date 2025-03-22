@@ -1,0 +1,117 @@
+body {
+/* background-color: rgb(172, 208, 240); */
+background-color: rgb(164, 166, 167);
+font-family: monospace;
+}
+
+.link_voltar {
+text-align: center;
+padding: 10px 20px;
+font-size: 16px;
+color: #fff;
+background-color: #026d10;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+transition: background-color 0.3s;
+width: 30%;
+}
+
+.link_voltar:hover {
+    transition-duration: 0.5s;
+    transform: translateX(0px);
+    background-color: #2e8f3b;
+} 
+
+
+.caixa-pai {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    justify-content: center;
+    padding: 1rem;
+    margin-top: 5rem;
+    background-color: #fff;
+    height: 500px;
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px grey;
+    width: 80%;
+    justify-content: center;
+    margin: auto;
+    margin-top: 3rem;
+}
+
+.caixa-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.caixa {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.centro {
+    text-align: center;
+}
+
+.texto {
+    background-color: #fff;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.texto:hover {
+    transition-duration: 0.5s;
+    background-color: rgb(141, 248, 248);    
+    transform:translateY(1px);
+    }
+
+.texto_2 {
+    padding: 10px;
+    background-color: #858585;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    }
+
+    .texto_2:hover {
+        transition-duration: 0.3s;
+        background-color: #aaa8a8; 
+        color: #535252;  
+        transform:translateY(0px);
+        
+    }
+
+    #linha {
+        width: 100%;
+        border-bottom: 1px solid #000000;
+        margin-top: 100px;
+      }
+      
+      .inv {
+        color: #fff;
+      }
+
+      .texto_2_campo {
+        padding: 10px;
+        background-color: #858585;
+        color: #000;
+        border-radius: 10px;
+        text-align: center;
+        text-decoration: none;
+        color: #fff;
+        margin-bottom: 5px;
+      }
+
+      .texto_2_campo:hover {
+        transition-duration: 0.3s;
+        background-color: #aaa8a8; 
+        color: #020202;  
+        transform:translateY(0px);
+      }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <link rel="stylesheet" href="css/jgv.css">
+</head>
+<body>
+    <div id="gameBoard" class="game-board"></div>
+    <button class="btn-restart" onclick="startGame()">Reiniciar Jogo</button>
+    <script src="js/jgv.js"></script><br>
+
+<a href="menu_jogos.html"><input type="button" value="voltar"  class="btn-restart_1"></a>
+
+<script>
+// Efeito de carregamento suave
+document.addEventListener("DOMContentLoaded", function() {
+ document.body.style.opacity = "0";
+ setTimeout(() => {
+     document.body.style.transition = "opacity 0.5s ease";
+     document.body.style.opacity = "1";
+ }, 100);
+}); 
+</script>
+</body>
+</html>

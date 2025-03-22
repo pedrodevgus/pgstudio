@@ -1,0 +1,130 @@
+/* Estilos gerais */
+body {
+  font-family: cursive;
+  text-align: center;
+  background-color: rgb(210, 230, 247);
+}
+
+/* Containers do jogo */
+#clickerContainer, #shopContainer {
+  display: inline-block;
+  margin: 20px;
+}
+
+/* Estilos dos botões */
+button {
+  margin-top: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.texto {
+  padding: 10px;
+  background-color: #858585;
+  color: #000;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  display: inline-block; /* Garante que o link seja tratado como um bloco */
+  margin-top: 10px;
+}
+
+.texto:hover {
+  transition-duration: 0.3s;
+  background-color: #aaa8a8; 
+  color: #535252;  
+  transform: translateY(0px);
+}
+
+.texto_2 {
+  padding: 10px;
+  background-color: #78daf8;
+  color: #000;
+  border-radius: 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block; /* Garante que o link seja tratado como um bloco */
+  margin-top: 10px;
+  border: none;
+
+}
+
+.texto_2:hover {
+  transition-duration: 0.3s;
+  background-color: #56cefd; 
+  color: #000;  
+  transform: translateY(0px);
+  outline: none;
+}
+
+/* Classes de cores */
+.laranja {
+  color: orange;
+}
+
+.amarelo {
+  color: rgb(201, 201, 5);
+}
+
+.verde {
+  color: green;
+}
+
+.fonte {
+  font-size: 20px;
+}
+
+.dinheiro {
+  color: rgb(255, 166, 0);
+}
+
+/* Estilos da imagem do cookie */
+#cookie {
+  width: 75px;
+}
+
+.cinza {
+  color: rgb(100, 97, 97);
+}
+
+.cinza_mais_escuro {
+  color: rgb(32, 32, 32);
+}
+
+.cinza_amarelo {
+  color: hsl(54, 98%, 31%);
+}
+
+.fa-solid_fa-arrow-pointer {
+font-size: 18px;
+}
+
+.dinheiro_2 {
+transition-duration: 0.5;
+transform: translateX(2px);
+color: hsl(54, 98%, 31%) ;
+}
+.inv {
+  color: rgb(210, 230, 247);
+}
+/* 
+#finalButton {
+  border: none;
+  outline: none;
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#finalButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+} */
+
+.vermelho {
+  color: rgb(253, 107, 107);
+}

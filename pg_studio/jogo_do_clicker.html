@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clicker Game</title>
+  <link rel="stylesheet" href="css/jogo_do_clicker.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <div id="clickerContainer">
+    <h4 class="cinza">Site em teste</h4>
+    <h4>objetivo:<span class="vermelho">seja o rei da empada</span></h4>
+    <h1><span class="laranja">P</span><span class="amarelo">G</span><span class="verde"> Studio</span></h1>
+    <h2>Clicker Game  <span class="fa-solid_fa-arrow-pointer"><i class="fa-solid fa-arrow-pointer"></i></span></h2>
+    <span><p>empadas: <span id="money" class="dinheiro">0</span></p></span>
+    <p><span>Clique aqui ==<span class="fonte">></span></span> <span class="inv"></span><img src="images/empada.png" alt="Cookie para clicar" id="cookie" onclick="clickCookie()"></p>
+  </div>
+  <div id="shopContainer">
+    <h5>dica: <span class="cinza_amarelo">compre 5 "dpc" e 3 "conzinheiros"</span> para melhor vantagem</h5>
+    <h2>Loja:</h2>
+    <h3 class="cinza">empadas por clique: <span id="mpc">1</span></h3>
+    <button onclick="upgradeMPC()" class="texto_2">Atualizar "DPC" (custa: <span id="mpcCost">10</span> dinheiros)</button>
+    <h3 class="cinza">empadas por segundos: <span id="mps">0</span></h3>
+    <button onclick="buyMPS()" class="texto_2">Comprar conzinheiros (Custa: <span id="mpsCost">50</span> empadas)</button>
+    <h2 class="cinza_mais_escuro">construção:</h2>
+    <button onclick="buytrgr()" class="texto_2">Construir uma fazenda (Custa: <span id="trgrmpsCost">200</span> empadas)</button><br>
+    <button onclick="buypg_emp()" class="texto_2">Construir uma fábrica (Custa: <span id="pg_emp_mps_cost">700</span> empadas)</button>
+   <!-- Botão final (visível desde o início) -->
+    <h2>O final:</h2>
+    <div id="finalContainer">
+      <button id="infg" class="texto_2">Finalizar Jogo (custa: 1 milhão de empadas)</button>
+    </div>
+
+  <div>
+    <a href="menu_jogos.html" class="texto">Voltar?</a>
+  </div>
+
+  <!-- Script no final do arquivo -->
+  <script src="js/jogo_do_clicker.js"></script>
+</body>
+</html>

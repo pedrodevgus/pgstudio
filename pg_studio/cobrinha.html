@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!-- Coding By CodingNepal - youtube.com/codingnepal -->
+<html lang="pt" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title>Snake Game JavaScript | CodingNepal</title>
+  <link rel="stylesheet" href="css/cobrinha.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+  <script src="js/cobrinha.js" defer></script>
+</head>
+
+<body>
+  <div class="d-flex">
+    <div class="wrapper">
+      <div class="game-details">
+        <span class="score">Score: 0</span>
+        <span class="high-score">High Score: 0</span>
+      </div>
+      <div class="play-board"></div>
+      <div class="controls">
+        <i data-key="ArrowLeft" class="fa-solid fa-arrow-left-long"></i>
+        <i data-key="ArrowUp" class="fa-solid fa-arrow-up-long"></i>
+        <i data-key="ArrowRight" class="fa-solid fa-arrow-right-long"></i>
+        <i data-key="ArrowDown" class="fa-solid fa-arrow-down-long"></i>
+      </div>
+    </div>
+    <div>
+      <a href="pg.html" class="texto">Voltar?</a>
+    </div>
+  </div>
+  
+   
+
+
+  <script>
+    // Efeito de carregamento suave
+    document.addEventListener("DOMContentLoaded", function () {
+      document.body.style.opacity = "0";
+      setTimeout(() => {
+        document.body.style.transition = "opacity 0.5s ease";
+        document.body.style.opacity = "1";
+      }, 100);
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f8ff; /* Fundo azul claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 10px;
+}
+
+.container {
+    background-color: #ffffff; /* Fundo branco */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    width: 90%; /* Ocupa 90% da largura da tela */
+    max-width: 400px; /* Largura máxima para telas maiores */
+}
+
+#sudoku-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 2px;
+    border: 3px solid #333; /* Borda escura */
+    background-color: #333; /* Fundo escuro para as divisões */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.row {
+    display: contents;
+}
+
+.cell {
+    width: 100%; /* Células ocupam 100% da largura disponível */
+    aspect-ratio: 1; /* Mantém as células quadradas */
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 1.5;
+    font-size: 4vw; /* Tamanho da fonte responsivo (4% da largura da viewport) */
+    font-weight: bold;
+    background-color: #ffffff; /* Fundo branco */
+    transition: background-color 0.3s ease;
+}
+
+.cell:focus {
+    outline: none;
+    background-color: #e0f7fa; /* Azul claro ao focar */
+}
+
+.cell.fixed {
+    background-color: #f0f0f0; /* Fundo cinza claro para números fixos */
+    color: #333; /* Cor escura para números fixos */
+}
+
+.cell.editable {
+    color: #00796b; /* Verde escuro para números editáveis */
+}
+
+.cell:nth-child(3n):not(:nth-child(9n)) {
+    border-right: 2px solid #333; /* Divisão mais forte a cada 3 células */
+}
+
+.row:nth-child(3n) .cell {
+    border-bottom: 2px solid #333; /* Divisão mais forte a cada 3 linhas */
+}
+
+.buttonContainer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column; /* Botões em coluna para celular */
+    gap: 10px;
+    align-items: center;
+}
+
+.buttonContainer button {
+    padding: 10px 20px;
+    font-size: 4vw; /* Tamanho da fonte responsivo */
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #00796b; /* Verde escuro */
+    color: #ffffff; /* Texto branco */
+    transition: background-color 0.3s ease;
+    width: 100%; /* Botões ocupam 100% da largura */
+    max-width: 200px; /* Largura máxima para botões */
+}
+
+.buttonContainer button:hover {
+    background-color: #004d40; /* Verde mais escuro ao passar o mouse */
+}
+
+/* Estilo específico para o botão "Voltar" */
+.buttonContainer button.voltar {
+    background-color: #6c757d; /* Cinza */
+}
+
+.buttonContainer button.voltar:hover {
+    background-color: #5a6268; /* Cinza mais escuro ao passar o mouse */
+}
+
+/* Ajustes para telas maiores */
+@media (min-width: 600px) {
+    .container {
+        max-width: 500px; /* Aumenta a largura máxima para tablets e desktops */
+    }
+
+    .cell {
+        font-size: 18px; /* Tamanho da fonte fixo para telas maiores */
+    }
+
+    .buttonContainer {
+        flex-direction: row; /* Botões em linha para telas maiores */
+    }
+
+    .buttonContainer button {
+        width: auto; /* Largura automática para botões */
+        font-size: 16px; /* Tamanho da fonte fixo para telas maiores */
+    }
+}
