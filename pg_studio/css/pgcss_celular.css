@@ -84,6 +84,7 @@ color: #486848;
 
 .link_voltar {
     color: #005a7e;
+    text-decoration: none;
     }
 
 .link_voltar:hover {
