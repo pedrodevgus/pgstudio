@@ -11,6 +11,33 @@ body {
     background-color: rgb(164, 166, 167);
 }
 
+
+@media (max-width: 600px) {
+    .caixa_pc, .caixa_pc_filha, .caixa-btn_pc {
+        display: none !important;
+    }
+
+    .caixa-btn_mob {
+        display: flex;
+        justify-content: center;
+    }
+
+    
+    .caixa-pai {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        justify-content: center;
+        padding: 1rem;
+        background-color: #fff;
+        border-radius: 20px;
+        box-shadow: 5px 5px 5px grey;
+        width: 80%;
+        justify-content: center;
+        margin: auto;
+    }
+
+}
 .texto {
     background-color: #fff;
     color: #000;
@@ -199,6 +226,10 @@ text-decoration: none;
     width: 100%;
     border-bottom: 1px solid #000000;
     margin-top: 40px;
+    }
+    
+@media (min-width: 601px) {
+    .caixa-btn_mob {display: none;}
     }
     
     .vermelho_amarelo_centro {

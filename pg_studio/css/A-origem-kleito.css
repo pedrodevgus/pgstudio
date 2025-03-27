@@ -1,0 +1,64 @@
+body {
+    background-color: rgb(199, 170, 123);
+    text-align: center;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.escu {
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    color: rgb(75, 4, 4);
+}
+
+.fonte {
+    font-size: 16px;
+}
+
+.kleito {
+    color: rgb(5, 113, 255);
+}
+
+
+.texto {    padding: 10px;
+    background-color: #858585;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    display: inline-block; /* Garante que o link seja tratado como um bloco */
+    margin-top: 10px;
+}
+
+.texto:hover {
+  transition-duration: 0.3s;
+  background-color: #aaa8a8; 
+  color: #2e2d2d;  
+  transform:translateY(0px);
+}
+
+.fonte_2 {
+    font-size: 30px;
+}
+
+.cinza {
+    color: rgb(100, 97, 97);
+    
+}
+
+.texto_2 {
+    padding: 10px;
+    background-color: #858585;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    }
+
+    .texto_2:hover {
+        transition-duration: 0.3s;
+        background-color: #aaa8a8; 
+        color: #292828;  
+        transform:translateY(0px);
+        
+    }
