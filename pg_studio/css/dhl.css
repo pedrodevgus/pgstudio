@@ -30,7 +30,8 @@ text-align: center;
     }
 
     .cursive {
-        font-family: cursive;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: #7a2a2a;
     }
 
 .azul {
@@ -50,3 +51,22 @@ text-align: center;
 .fonte_2 {
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
+
+
+.texto_3 {
+    padding: 10px;
+    background-color: #858585;
+    color: #000;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    color: #fff;
+    }
+
+.texto_3:hover {
+    transition-duration: 0.3s;
+    background-color: #aaa8a8; 
+    color: #292828;  
+    transform:translateY(0px);
+        
+    }

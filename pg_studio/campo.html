@@ -1,32 +1,37 @@
-// <!DOCTYPE html>
-<html>
-
+<!DOCTYPE html>
+<html lang="pt-BR">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Campo Minado</title>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" type="text/css" href="css/campo.css" />
-    <script type="text/javascript" src="js/campo.js"></script>
+    <link rel="stylesheet" href="css/campo.css">
 </head>
-<!--tabuleiro-->
 <body>
-    <h1><span class="laranja">P</span><span class="amarelo">G</span> <span class="verde">studio</span></h1>
-    <h2>Campo Minado</h2>
-    <table id="tabela">
-
-    </table>
-    <div>
-        <label>Dificuldade:</label>
-        <select id="dificuldade">
-            <option value="0" selected>Fácil</option>
-            <option value="1">Intermediário</option>
-            <option value="2">Difícil</option>
-        </select>
+    <div class="container">
+        <h1><span class="laranja">P</span><span class="amarelo">G</span> <span class="verde">studio</span></h1>
+        <h2>Campo Minado</h2>
         
-  <div>
-    <a href="menu_jogos.html" class="texto">Voltar?</a>
-  </div>
+        <div class="game-controls">
+            <label>Dificuldade:</label>
+            <select id="dificuldade">
+                <option value="0" selected>Fácil</option>
+                <option value="1">Intermediário</option>
+                <option value="2">Difícil</option>
+            </select>
+        </div>
 
+        <div class="game-container">
+            <table id="tabela"></table>
+        </div>
+
+        <div class="restart-container">
+            <button id="reiniciar" class="texto" style="display: none;">Reiniciar Jogo</button>
+        </div>
+
+        <div class="footer">
+            <a href="menu_jogos.html" class="texto">Voltar</a>
+        </div>
     </div>
+    <script src="js/campo.js"></script>
 </body>
-
 </html>

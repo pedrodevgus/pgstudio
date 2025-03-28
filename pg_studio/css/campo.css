@@ -1,99 +1,154 @@
 * {
-    font-family: verdana;
-  }
+  box-sizing: border-box;
+  font-family: Verdana, sans-serif;
+}
 
-  body {
-    background-color: rgb(210, 230, 247);
-  }
-  
-  h1 {
-      text-align: center;
-  }
+body {
+  background-color: rgb(210, 230, 247);
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  h2 {
-    text-align: center;
-  }
-  div {
-      text-align: center;
-  }
-  table {
-      margin: 1em auto;
-      border-collapse: collapse;
-  }
+.container {
+  width: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+h1, h2 {
+  margin: 0.5em 0;
+}
+
+.game-container {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+td {
+  border: 1px solid #ccc;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+@media (max-width: 600px) {
   td {
-      border: 1px solid black;
-      width: 30px;
-      height: 30px;
-      text-align: center;
+      width: 25px;
+      height: 25px;
+      font-size: 0.8em;
   }
-  .blocked, .flag {
-      background: lightgray;    
-  }
-  .n1, .n2, .n3, .n4, .n5, .n6, .n7, .n8 {
-      background-color: #eee;
-  }
-  .n1 {
-      color: blue;
-  }
-  .n2 {
-      color: green;
-  }
-  .n3 {
-      color: red;
-  }
-  .n4 {
-      color: maroon;
-  }
-  .n5 {
-      color: blueviolet;
-  }
-  .n6 {
-      color: darkgoldenrod;
-  }
-  .n7 {
-      color: orange;
-  }
-  .n8 {
-      color: tomato;
-  }
-  
-/* Classes de cores */
-.laranja {
-    color: orange;
-  }
-  
-  .amarelo {
-    color: rgb(201, 201, 5);
-  }
-  
-  .verde {
-    color: green;
-  }
-  
-  .fonte {
-    font-size: 20px;
-  }
-  
-  
+}
+
+.blocked, .flag {
+  background: #ddd;
+  cursor: pointer;
+}
+
+.blocked:hover {
+  background: #ccc;
+}
+
+.flag {
+  background: #ffd700;
+}
+
+.n1 { color: blue; }
+.n2 { color: green; }
+.n3 { color: red; }
+.n4 { color: darkblue; }
+.n5 { color: purple; }
+.n6 { color: darkgoldenrod; }
+.n7 { color: black; }
+.n8 { color: gray; }
+
+.blank {
+  background-color: #f0f0f0;
+}
+
+.game-controls {
+  margin: 15px 0;
+}
+
+select {
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
 .texto {
-    padding: 10px;
-    background-color: #858585;
-    color: #000;
-    border-radius: 10px;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    display: inline-block; /* Garante que o link seja tratado como um bloco */
-    margin-top: 10px;
-  }
-  
-  .texto:hover {
-    transition-duration: 0.3s;
-    background-color: #b1b1b1; 
-    color: #3f3e3e;  
-    transform: translateY(0px);
-  }
-  
-  .tamanho {
-    size: 20px;
-  }
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 15px;
+  background-color: #858585;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.texto:hover {
+  background-color: #b1b1b1;
+  transform: translateY(-2px);
+}
+
+.laranja { color: orange; }
+.amarelo { color: #c9c905; }
+.verde { color: green; }
+
+.victory {
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0% { background-color: #f9f9f9; }
+  50% { background-color: #aaffaa; }
+  100% { background-color: #f9f9f9; }
+}
+
+.defeat {
+  background-color: #ffaaaa !important;
+}
+/* .restart-container { 
+  margin: 15px 0;
+}
+
+#reiniciar {
+  background-color: #4CAF50;
+  border: none;
+  cursor: pointer;
+}
+
+#reiniciar:hover {
+  background-color: #45a049;
+}
+. */
+.restart-container {
+  margin: 15px 0;
+  text-align: center;
+} 
+
+#reiniciar {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+#reiniciar:hover {
+  background-color: #45a049;
+}

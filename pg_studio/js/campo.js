@@ -1,11 +1,12 @@
 var linhas, colunas, bombas, matriz, tabela;
+
 function gerarMatriz(l, c) {
     matriz = [];
     for (var i = 0; i < l; i++) {
         matriz[i] = new Array(c).fill(0);
     }
-    console.log(matriz);
 }
+
 function gerarTabela(l, c) {
     gerarMatriz(l, c);
     var str = "";
@@ -17,18 +18,21 @@ function gerarTabela(l, c) {
         str += "</tr>";
     }
     tabela.innerHTML = str;
+    ajustarTamanhoCelulas();
 }
+
 function mostrarMatriz() {
     for (var i = 0; i < linhas; i++) {
         for (var j = 0; j < colunas; j++) {
             if (matriz[i][j] === -1) {
-                tabela.rows[i].cells[j].innerHTML = "&#128163;";
+                tabela.rows[i].cells[j].innerHTML = "💣";
             } else {
                 tabela.rows[i].cells[j].innerHTML = matriz[i][j];
             }
         }
     }
 }
+
 function gerarBombas() {
     for (var i = 0; i < bombas;) {
         var linha = Math.floor((Math.random() * linhas));
@@ -39,6 +43,7 @@ function gerarBombas() {
         }
     }
 }
+
 function gerarNumero(l, c) {
     var count = 0;
     for (var i = l - 1; i <= l + 1; i++) {
@@ -52,6 +57,7 @@ function gerarNumero(l, c) {
     }
     matriz[l][c] = count;
 }
+
 function gerarNumeros() {
     for (var i = 0; i < linhas; i++) {
         for (var j = 0; j < colunas; j++) {
@@ -61,20 +67,29 @@ function gerarNumeros() {
         }
     }
 }
+
 function bandeira(event) {
+    event.preventDefault();
     var cell = event.target;
-    var linha = cell.parentNode.rowIndex;
-    var coluna = cell.cellIndex;
-    if (cell.className === "blocked") {
-        cell.className = "flag";
-        cell.innerHTML = "&#128681;";//&#9873;
-    } else if (cell.className === "flag") {
-        cell.className = "blocked";
-        cell.innerHTML = "";
+    if (cell.tagName === 'TD') {
+        var linha = cell.parentNode.rowIndex;
+        var coluna = cell.cellIndex;
+        if (cell.className === "blocked") {
+            cell.className = "flag";
+            cell.innerHTML = "🚩";
+        } else if (cell.className === "flag") {
+            cell.className = "blocked";
+            cell.innerHTML = "";
+        }
+        fimDeJogo();
     }
     return false;
 }
+
 function init() {
+    // Esconde o botão de reiniciar
+    document.getElementById('reiniciar').style.display = 'none';
+    
     tabela = document.getElementById("tabela");
     tabela.onclick = verificar;
     tabela.oncontextmenu = bandeira;
@@ -99,8 +114,8 @@ function init() {
     gerarTabela(linhas, colunas);
     gerarBombas();
     gerarNumeros();
-    //    mostrarMatriz();
 }
+
 function limparCelulas(l, c) {
     for (var i = l - 1; i <= l + 1; i++) {
         for (var j = c - 1; j <= c + 1; j++) {
@@ -124,29 +139,32 @@ function limparCelulas(l, c) {
         }
     }
 }
+
 function mostrarBombas() {
     for (var i = 0; i < linhas; i++) {
         for (var j = 0; j < colunas; j++) {
             if (matriz[i][j] === -1) {
                 var cell = tabela.rows[i].cells[j];
-                cell.innerHTML = "&#128163;";
+                cell.innerHTML = "💣";
                 cell.className = "blank";
             }
         }
     }
 }
+
 function verificar(event) {
     var cell = event.target;
-    if (cell.className !== "flag") {
+    if (cell.tagName === 'TD' && cell.className !== "flag") {
         var linha = cell.parentNode.rowIndex;
         var coluna = cell.cellIndex;
         switch (matriz[linha][coluna]) {
             case -1:
                 mostrarBombas();
-                cell.style.backgroundColor = "red";
+                cell.classList.add("defeat");
                 tabela.onclick = undefined;
                 tabela.oncontextmenu = undefined;
-                alert("Você perdeu!");
+                mostrarBotaoReiniciar();
+                setTimeout(() => alert("Você perdeu! Clique em Reiniciar para jogar novamente."), 100);
                 break;
             case 0:
                 limparCelulas(linha, coluna);
@@ -158,28 +176,57 @@ function verificar(event) {
         fimDeJogo();
     }
 }
+
 function fimDeJogo() {
     var cells = document.querySelectorAll(".blocked, .flag");
     if (cells.length === bombas) {
         mostrarBombas();
         tabela.onclick = undefined;
         tabela.oncontextmenu = undefined;
-        alert("Você venceu!");
+        document.querySelectorAll(".blank").forEach(cell => {
+            cell.classList.add("victory");
+        });
+        mostrarBotaoReiniciar();
+        setTimeout(() => alert("Você venceu! Clique em Reiniciar para jogar novamente."), 100);
     }
 }
+
+function ajustarTamanhoCelulas() {
+    const celulas = tabela.getElementsByTagName('td');
+    const tamanhoBase = window.innerWidth < 600 ? 25 : 30;
+    
+    for (let celula of celulas) {
+        celula.style.width = `${tamanhoBase}px`;
+        celula.style.height = `${tamanhoBase}px`;
+    }
+}
+
+function mostrarBotaoReiniciar() {
+    const botao = document.getElementById('reiniciar');
+    botao.style.display = 'inline-block';
+    botao.onclick = function() {
+        init();
+    };
+}
+
 function registerEvents() {
     init();
     var diff = document.getElementById("dificuldade");
     diff.onchange = init;
+    
+    window.addEventListener('resize', ajustarTamanhoCelulas);
+    
+    // Configura o botão de reiniciar
+    document.getElementById('reiniciar').addEventListener('click', function() {
+        init();
+    });
 }
-onload = registerEvents;
 
-
-// Efeito de carregamento suave
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function() {
+    registerEvents();
     document.body.style.opacity = "0";
     setTimeout(() => {
-      document.body.style.transition = "opacity 0.5s ease";
-      document.body.style.opacity = "1";
+        document.body.style.transition = "opacity 0.5s ease";
+        document.body.style.opacity = "1";
     }, 100);
-  });
+});
