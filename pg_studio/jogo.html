@@ -3,18 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jogo de Plataforma 2D</title>
+    <title>Jogo do Coração Pixelado</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background-color: #87CEEB;
-            font-family: Arial, sans-serif;
+            background-color: #000;
+            font-family: 'Courier New', monospace;
         }
         
         #gameCanvas {
             display: block;
-            background-color: #87CEEB;
+            background-color: #000;
+            image-rendering: pixelated;
         }
         
         #score {
@@ -26,24 +27,57 @@
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
         
+        #healthBarContainer {
+            position: absolute;
+            top: 50px;
+            left: 10px;
+            width: 200px;
+            height: 20px;
+            background-color: #333;
+            border: 2px solid #555;
+        }
+        
+        #healthBar {
+            height: 100%;
+            width: 100%;
+            background-color: #4CAF50;
+            transition: width 0.3s;
+        }
+        
         #startScreen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
+            background-color: rgba(0, 0, 0, 0.8);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: white;
+            z-index: 10;
+        }
+        
+        #winScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 10;
         }
         
         button {
             padding: 10px 20px;
             font-size: 18px;
-            background-color: #4CAF50;
+            background-color: #3498db;
             color: white;
             border: none;
             border-radius: 5px;
@@ -52,18 +86,66 @@
         }
         
         button:hover {
-            background-color: #45a049;
+            background-color: #2980b9;
+        }
+
+        .btn {
+            padding: 10px;
+            height: 10px;
+            background-color: green;
+            color: #fff;
+            margin-bottom: 10px;
+            border-radius: 10px;
+        }
+
+        .btn:hover {
+            transition-duration: 0.5s;
+            transform: translateY(0px);
+            background-color: rgb(2, 109, 2);
         }
     </style>
 </head>
 <body>
+    <!-- Sons do jogo -->
+    <audio id="damageSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-8-bit-lose-2031.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="jumpSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="winSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="gameOverSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
+    </audio>
+    
     <div id="score">Pontuação: 0</div>
+    <div id="healthBarContainer">
+        <div id="healthBar"></div>
+    </div>
     <canvas id="gameCanvas"></canvas>
     
     <div id="startScreen">
-        <h1>Jogo de Plataforma 2D</h1>
+        <h1>Jogo do Coração Pixelado</h1>
         <p>Use as setas para mover e a barra de espaço para pular</p>
-        <button id="startButton">Começar Jogo</button>
+        <p>Cuidado com os ossos e jatos azuis - eles causam dano e veneno!</p>
+        <button id="startButton">Começar Jogo</button><br>
+
+        <div>
+            <a href="menu_jogos.html" class="btn">voltar</a>
+        </div>
+    </div>
+
+    <div id="winScreen">
+        <h1>Você Venceu!</h1>
+        <div id="skullAnimation"></div>
+        <p>Você atingiu 5000 pontos!</p>
+        <button id="restartButton">Jogar Novamente</button><br>
+        
+        <div>
+            <a href="menu_jogos.html" class="btn">voltar</a>
+        </div>
     </div>
 
     <script>
@@ -71,8 +153,18 @@
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const scoreElement = document.getElementById('score');
+        const healthBar = document.getElementById('healthBar');
         const startScreen = document.getElementById('startScreen');
+        const winScreen = document.getElementById('winScreen');
         const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
+        const skullAnimation = document.getElementById('skullAnimation');
+        
+        // Elementos de áudio
+        const damageSound = document.getElementById('damageSound');
+        const jumpSound = document.getElementById('jumpSound');
+        const winSound = document.getElementById('winSound');
+        const gameOverSound = document.getElementById('gameOverSound');
         
         // Ajustar tamanho do canvas
         canvas.width = window.innerWidth;
@@ -80,64 +172,323 @@
         
         // Variáveis do jogo
         let score = 0;
+        let health = 100;
         let gameRunning = false;
-        let gameSpeed = 5;
-        let gravity = 0.5;
+        let gameSpeed = 3;
+        let gravity = 0.3;
+        let poisonStacks = 0;
+        let lastPoisonTime = 0;
+        let animationFrame = 0;
+        let femurInterval, blasterInterval;
         
-        // Jogador
+        // Jogador (coração pixelado azul)
         const player = {
             x: 100,
             y: canvas.height - 150,
-            width: 30,
-            height: 50,
-            color: '#FF5733',
+            width: 32,
+            height: 32,
+            color: '#3498db',
             velocityY: 0,
             jumping: false,
-            speed: 8,
-            jumpForce: -12
+            speed: 6,
+            jumpForce: -10,
+            invulnerable: false,
+            invulnerableTime: 0,
+            // Sprite do coração pixelado (8x8)
+            heartSprite: [
+                [0, 1, 1, 0, 0, 1, 1, 0],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1],
+                [0, 1, 1, 1, 1, 1, 1, 0],
+                [0, 0, 1, 1, 1, 1, 0, 0],
+                [0, 0, 0, 1, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0, 0, 0, 0]
+            ]
         };
         
-        // Plataformas
-        const platforms = [];
-        const platformWidth = 100;
-        const platformHeight = 20;
+        // Plataforma única (chão)
+        const platforms = [{
+            x: 0,
+            y: canvas.height - 100,
+            width: canvas.width,
+            height: 20,
+            color: '#555'
+        }];
         
-        // Inicializar plataformas
-        function initPlatforms() {
-            platforms.length = 0;
+        // Obstáculos (fêmur pixelado)
+        const femurs = [];
+        
+        // Gaster Blasters (caveiras)
+        const gasterBlasters = [];
+        
+        // Jatos azuis
+        const blueBlasts = [];
+        
+        // Venenos ativos
+        const activePoisons = [];
+        
+        // Sprites da animação de vitória (caveira virando pó)
+        const skullDustSprites = [
+            // Frame 1 - Caveira inteira
+            [
+                [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                [0,1,0,0,1,1,0,0,0,0,1,1,0,0,1,0],
+                [0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
+                [1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],
+                [1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1],
+                [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1],
+                [1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            // Frame 2 - Começando a desintegrar
+            [
+                [0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0],
+                [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                [0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0],
+                [0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
+                [1,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+                [1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1],
+                [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
+                [1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                [0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            // Frame 3 - Mais desintegrado
+            [
+                [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+                [0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,1,0,0,1,0,0,0,0,0,1,0,0,0,0,0],
+                [0,0,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
+                [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,1],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
+                [0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0],
+                [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                [0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0],
+                [0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            // Frame 4 - Quase totalmente desintegrado
+            [
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0],
+                [0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ],
+            // Frame 5 - Totalmente desintegrado
+            [
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+                [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+            ]
+        ];
+        
+        // Atualizar barra de vida
+        function updateHealthBar() {
+            const percentage = Math.max(0, health) / 100;
+            healthBar.style.width = `${percentage * 100}%`;
             
-            // Plataforma inicial
-            platforms.push({
-                x: 0,
-                y: canvas.height - 100,
-                width: canvas.width,
-                height: platformHeight,
-                color: '#2ECC71'
-            });
-            
-            // Adicionar plataformas aleatórias
-            for (let i = 0; i < 5; i++) {
-                platforms.push({
-                    x: Math.random() * (canvas.width - platformWidth),
-                    y: canvas.height - 200 - (Math.random() * 300),
-                    width: platformWidth,
-                    height: platformHeight,
-                    color: '#2ECC71'
-                });
+            // Mudar cor conforme a vida
+            if (health > 60) {
+                healthBar.style.backgroundColor = '#4CAF50'; // Verde
+            } else if (health > 30) {
+                healthBar.style.backgroundColor = '#FFC107'; // Amarelo
+            } else {
+                healthBar.style.backgroundColor = '#F44336'; // Vermelho
             }
         }
         
-        // Obstáculos
-        const obstacles = [];
+        // Causar dano ao jogador
+        function takeDamage(amount, isPoison = false) {
+            if (player.invulnerable) return;
+            
+            // Tocar som de dano
+            damageSound.currentTime = 0;
+            damageSound.play();
+            
+            health -= amount;
+            updateHealthBar();
+            
+            // Aplicar veneno se não for um dano de veneno
+            if (!isPoison) {
+                poisonStacks += 1;
+                activePoisons.push({
+                    duration: 3000, // 3 segundos
+                    damagePerSecond: 1,
+                    startTime: Date.now()
+                });
+            }
+            
+            // Tornar jogador invulnerável brevemente
+            player.invulnerable = true;
+            player.invulnerableTime = Date.now() + 500; // 0.5 segundos
+            
+            // Verificar game over
+            if (health <= 0) {
+                health = 0;
+                gameOver();
+            }
+        }
         
-        // Adicionar obstáculo
-        function addObstacle() {
-            obstacles.push({
+        // Adicionar fêmur
+        function addFemur() {
+            femurs.push({
                 x: canvas.width,
-                y: canvas.height - 120,
-                width: 30,
+                y: canvas.height - 130,
+                width: 40,
                 height: 80,
-                color: '#E74C3C'
+                color: '#ffffff',
+                // Sprite do fêmur (16x16)
+                femurSprite: [
+                    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0],
+                    [0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0]
+                ],
+                // Cabeça do fêmur
+                femurHeadSprite: [
+                    [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0],
+                    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                    [0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+                    [0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0],
+                    [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+                ]
+            });
+        }
+        
+        // Adicionar Gaster Blaster (caveira)
+        function addGasterBlaster() {
+            const side = Math.random() > 0.5 ? 'top' : 'right';
+            const size = 64; // Tamanho maior para melhor detalhe
+            
+            gasterBlasters.push({
+                x: side === 'right' ? canvas.width : Math.random() * canvas.width,
+                y: side === 'top' ? 50 : Math.random() * (canvas.height - 200),
+                width: size,
+                height: size,
+                side: side,
+                charging: false,
+                firing: false,
+                chargeTime: 0,
+                // Sprite da caveira (16x16) - Gaster Blaster
+                blasterSprite: [
+                    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                    [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                    [0,1,0,0,1,1,0,0,0,0,1,1,0,0,1,0],
+                    [0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
+                    [1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],
+                    [1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1],
+                    [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1],
+                    [1,0,0,0,0,1,1,0,0,1,1,0,0,0,0,1],
+                    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                    [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                    [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                    [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                ],
+                // Boca aberta quando atirando (16x16)
+                firingSprite: [
+                    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                    [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                    [0,1,0,0,1,1,0,0,0,0,1,1,0,0,1,0],
+                    [0,1,0,1,0,0,1,0,0,1,0,0,1,0,1,0],
+                    [1,0,0,1,0,0,1,0,0,1,0,0,1,0,0,1],
+                    [1,0,0,1,0,0,0,0,0,0,0,0,1,0,0,1],
+                    [1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1],
+                    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                    [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+                    [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                    [0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0],
+                    [0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0],
+                    [0,0,0,1,1,0,0,0,0,0,0,1,1,0,0,0],
+                    [0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0],
+                    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+                ]
+            });
+        }
+        
+        // Adicionar jato azul longo
+        function addBlueBlast(x, y, targetX, targetY) {
+            const angle = Math.atan2(targetY - y, targetX - x);
+            const speed = 7;
+            const length = 120; // Comprimento aumentado do jato
+            
+            blueBlasts.push({
+                x: x,
+                y: y,
+                width: 20,
+                length: length,
+                angle: angle,
+                velocityX: Math.cos(angle) * speed,
+                velocityY: Math.sin(angle) * speed,
+                color: '#00ffff',
+                damage: 2, // Dano do Gaster Blaster
+                poisonDamage: 2 // Dano de veneno do Gaster Blaster
             });
         }
         
@@ -170,37 +521,119 @@
             initGame();
         });
         
+        // Reiniciar jogo
+        restartButton.addEventListener('click', () => {
+            winScreen.style.display = 'none';
+            initGame();
+        });
+        
         // Inicializar jogo
         function initGame() {
             score = 0;
+            health = 100;
             gameRunning = true;
             player.x = 100;
             player.y = canvas.height - 150;
             player.velocityY = 0;
             player.jumping = false;
+            player.invulnerable = false;
+            poisonStacks = 0;
+            activePoisons.length = 0;
+            animationFrame = 0;
             
-            initPlatforms();
-            obstacles.length = 0;
+            femurs.length = 0;
+            gasterBlasters.length = 0;
+            blueBlasts.length = 0;
             
-            // Adicionar obstáculos em intervalos regulares
-            setInterval(addObstacle, 2000);
+            updateHealthBar();
+            
+            // Limpar intervalos anteriores se existirem
+            if (femurInterval) clearInterval(femurInterval);
+            if (blasterInterval) clearInterval(blasterInterval);
+            
+            // Adicionar fêmures em intervalos regulares
+            femurInterval = setInterval(addFemur, 2500);
+            
+            // Adicionar Gaster Blasters em intervalos aleatórios
+            blasterInterval = setInterval(addGasterBlaster, 4000);
             
             // Iniciar loop do jogo
             requestAnimationFrame(gameLoop);
+        }
+        
+        // Vitória - jogador atingiu 5000 pontos
+        function winGame() {
+            gameRunning = false;
+            winScreen.style.display = 'flex';
+            
+            // Tocar som de vitória
+            winSound.currentTime = 0;
+            winSound.play();
+            
+            // Limpar intervalos
+            clearInterval(femurInterval);
+            clearInterval(blasterInterval);
+            
+            // Iniciar animação da caveira virando pó
+            animateSkullDust();
+        }
+        
+        // Animação da caveira virando pó
+        function animateSkullDust() {
+            if (animationFrame < skullDustSprites.length * 10) { // 10 frames por sprite
+                const spriteIndex = Math.floor(animationFrame / 10);
+                if (spriteIndex < skullDustSprites.length) {
+                    // Criar canvas para a animação
+                    skullAnimation.innerHTML = '';
+                    const animCanvas = document.createElement('canvas');
+                    animCanvas.width = 160;
+                    animCanvas.height = 160;
+                    animCanvas.style.imageRendering = 'pixelated';
+                    skullAnimation.appendChild(animCanvas);
+                    
+                    const animCtx = animCanvas.getContext('2d');
+                    const sprite = skullDustSprites[spriteIndex];
+                    
+                    // Desenhar sprite atual
+                    for (let row = 0; row < sprite.length; row++) {
+                        for (let col = 0; col < sprite[row].length; col++) {
+                            if (sprite[row][col]) {
+                                animCtx.fillStyle = '#ffffff';
+                                animCtx.fillRect(
+                                    col * 10,
+                                    row * 10,
+                                    10,
+                                    10
+                                );
+                            }
+                        }
+                    }
+                    
+                    animationFrame++;
+                    setTimeout(animateSkullDust, 100); // 100ms por frame
+                }
+            }
         }
         
         // Loop principal do jogo
         function gameLoop() {
             if (!gameRunning) return;
             
+            // Verificar vitória
+            if (score >= 5000) {
+                winGame();
+                return;
+            }
+            
             // Limpar canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             
-            // Atualizar jogador
+            // Atualizar elementos do jogo
             updatePlayer();
-            
-            // Atualizar obstáculos
-            updateObstacles();
+            updateFemurs();
+            updateGasterBlasters();
+            updateBlueBlasts();
+            updatePoison();
             
             // Verificar colisões
             checkCollisions();
@@ -208,11 +641,18 @@
             // Desenhar tudo
             drawPlayer();
             drawPlatforms();
-            drawObstacles();
+            drawFemurs();
+            drawGasterBlasters();
+            drawBlueBlasts();
             
             // Atualizar pontuação
             score++;
             scoreElement.textContent = `Pontuação: ${Math.floor(score / 10)}`;
+            
+            // Verificar invulnerabilidade
+            if (player.invulnerable && Date.now() > player.invulnerableTime) {
+                player.invulnerable = false;
+            }
             
             // Continuar loop
             requestAnimationFrame(gameLoop);
@@ -232,65 +672,168 @@
             if ((keys.ArrowUp || keys.Space) && !player.jumping) {
                 player.velocityY = player.jumpForce;
                 player.jumping = true;
+                // Tocar som de pulo
+                jumpSound.currentTime = 0;
+                jumpSound.play();
             }
             
             // Aplicar gravidade
             player.velocityY += gravity;
             player.y += player.velocityY;
             
-            // Verificar colisão com plataformas
-            let onPlatform = false;
-            for (const platform of platforms) {
-                if (
-                    player.y + player.height >= platform.y &&
-                    player.y + player.height <= platform.y + platform.height &&
-                    player.x + player.width > platform.x &&
-                    player.x < platform.x + platform.width &&
-                    player.velocityY > 0
-                ) {
-                    player.y = platform.y - player.height;
-                    player.velocityY = 0;
-                    player.jumping = false;
-                    onPlatform = true;
-                }
-            }
-            
-            // Se não estiver em uma plataforma e estiver caindo
-            if (!onPlatform && player.y + player.height < canvas.height - 100) {
-                player.jumping = true;
-            }
-            
-            // Limitar ao chão
-            if (player.y + player.height > canvas.height - 100) {
-                player.y = canvas.height - 100 - player.height;
+            // Verificar colisão com plataforma
+            if (
+                player.y + player.height >= platforms[0].y &&
+                player.y + player.height <= platforms[0].y + platforms[0].height &&
+                player.x + player.width > platforms[0].x &&
+                player.x < platforms[0].x + platforms[0].width &&
+                player.velocityY > 0
+            ) {
+                player.y = platforms[0].y - player.height;
                 player.velocityY = 0;
                 player.jumping = false;
             }
+            
+            // Se não estiver na plataforma e estiver caindo
+            if (player.y + player.height < platforms[0].y) {
+                player.jumping = true;
+            }
         }
         
-        // Atualizar obstáculos
-        function updateObstacles() {
-            for (let i = obstacles.length - 1; i >= 0; i--) {
-                obstacles[i].x -= gameSpeed;
+        // Atualizar fêmures
+        function updateFemurs() {
+            for (let i = femurs.length - 1; i >= 0; i--) {
+                femurs[i].x -= gameSpeed;
                 
-                // Remover obstáculos que saíram da tela
-                if (obstacles[i].x + obstacles[i].width < 0) {
-                    obstacles.splice(i, 1);
+                // Remover fêmures que saíram da tela
+                if (femurs[i].x + femurs[i].width < 0) {
+                    femurs.splice(i, 1);
                 }
             }
         }
         
-        // Verificar colisões com obstáculos
+        // Atualizar Gaster Blasters
+        function updateGasterBlasters() {
+            for (let i = gasterBlasters.length - 1; i >= 0; i--) {
+                const blaster = gasterBlasters[i];
+                
+                // Mover blasters que estão no topo
+                if (blaster.side === 'top') {
+                    blaster.x -= 2;
+                }
+                
+                // Carregar e atirar
+                if (!blaster.charging && !blaster.firing && Math.random() < 0.01) {
+                    blaster.charging = true;
+                    blaster.chargeTime = 60; // 1 segundo (60 frames)
+                }
+                
+                if (blaster.charging) {
+                    blaster.chargeTime--;
+                    if (blaster.chargeTime <= 0) {
+                        blaster.charging = false;
+                        blaster.firing = true;
+                        // Adicionar jato azul direcionado ao jogador
+                        addBlueBlast(
+                            blaster.x + blaster.width/2,
+                            blaster.y + blaster.height/2,
+                            player.x + player.width/2,
+                            player.y + player.height/2
+                        );
+                        setTimeout(() => {
+                            blaster.firing = false;
+                        }, 500);
+                    }
+                }
+                
+                // Remover blasters que saíram da tela
+                if (blaster.x + blaster.width < 0 || blaster.y + blaster.height < 0) {
+                    gasterBlasters.splice(i, 1);
+                }
+            }
+        }
+        
+        // Atualizar jatos azuis
+        function updateBlueBlasts() {
+            for (let i = blueBlasts.length - 1; i >= 0; i--) {
+                const blast = blueBlasts[i];
+                blast.x += blast.velocityX;
+                blast.y += blast.velocityY;
+                
+                // Remover jatos que saíram da tela
+                if (blast.x + blast.width < 0 || blast.x > canvas.width ||
+                    blast.y + blast.width < 0 || blast.y > canvas.height) {
+                    blueBlasts.splice(i, 1);
+                }
+            }
+        }
+        
+        // Atualizar veneno
+        function updatePoison() {
+            const now = Date.now();
+            
+            // Aplicar dano de veneno a cada segundo
+            if (now - lastPoisonTime >= 1000 && activePoisons.length > 0) {
+                let totalDamage = 0;
+                
+                // Calcular dano total de todas as instâncias de veneno
+                for (let i = activePoisons.length - 1; i >= 0; i--) {
+                    const poison = activePoisons[i];
+                    totalDamage += poison.damagePerSecond;
+                    
+                    // Verificar se o veneno expirou
+                    if (now - poison.startTime >= poison.duration) {
+                        activePoisons.splice(i, 1);
+                    }
+                }
+                
+                if (totalDamage > 0) {
+                    takeDamage(totalDamage, true);
+                }
+                
+                lastPoisonTime = now;
+            }
+        }
+        
+        // Verificar colisões
         function checkCollisions() {
-            for (const obstacle of obstacles) {
-                if (
-                    player.x + player.width > obstacle.x &&
-                    player.x < obstacle.x + obstacle.width &&
-                    player.y + player.height > obstacle.y &&
-                    player.y < obstacle.y + obstacle.height
+            // Colisão com fêmures
+            for (const femur of femurs) {
+                if (!player.invulnerable &&
+                    player.x + player.width > femur.x &&
+                    player.x < femur.x + femur.width &&
+                    player.y + player.height > femur.y &&
+                    player.y < femur.y + femur.height
                 ) {
-                    gameOver();
-                    break;
+                    takeDamage(1); // Dano do fêmur
+                    poisonStacks += 1; // Adiciona veneno
+                    activePoisons.push({
+                        duration: 3000,
+                        damagePerSecond: 1,
+                        startTime: Date.now()
+                    });
+                }
+            }
+            
+            // Colisão com jatos azuis
+            for (let i = blueBlasts.length - 1; i >= 0; i--) {
+                const blast = blueBlasts[i];
+                
+                // Verificar colisão com jogador
+                if (!player.invulnerable &&
+                    player.x + player.width > blast.x - blast.width/2 &&
+                    player.x < blast.x + blast.width/2 &&
+                    player.y + player.height > blast.y - blast.width/2 &&
+                    player.y < blast.y + blast.width/2
+                ) {
+                    takeDamage(blast.damage); // Dano direto
+                    poisonStacks += 1; // Adiciona veneno
+                    activePoisons.push({
+                        duration: 3000,
+                        damagePerSecond: blast.poisonDamage,
+                        startTime: Date.now()
+                    });
+                    blueBlasts.splice(i, 1);
                 }
             }
         }
@@ -302,25 +845,156 @@
             document.querySelector('#startScreen h1').textContent = 'Fim de Jogo!';
             document.querySelector('#startScreen p').textContent = `Sua pontuação: ${Math.floor(score / 10)}`;
             startButton.textContent = 'Jogar Novamente';
+            
+            // Tocar som de game over
+            gameOverSound.currentTime = 0;
+            gameOverSound.play();
+            
+            // Limpar intervalos
+            clearInterval(femurInterval);
+            clearInterval(blasterInterval);
         }
         
-        // Funções de desenho
-        function drawPlayer() {
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-        }
-        
-        function drawPlatforms() {
-            for (const platform of platforms) {
-                ctx.fillStyle = platform.color;
-                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+        // Função para desenhar sprites pixelados
+        function drawPixelatedSprite(sprite, x, y, width, height, color) {
+            const pixelWidth = width / sprite[0].length;
+            const pixelHeight = height / sprite.length;
+            
+            for (let row = 0; row < sprite.length; row++) {
+                for (let col = 0; col < sprite[row].length; col++) {
+                    if (sprite[row][col]) {
+                        ctx.fillStyle = color;
+                        ctx.fillRect(
+                            x + col * pixelWidth,
+                            y + row * pixelHeight,
+                            pixelWidth,
+                            pixelHeight
+                        );
+                    }
+                }
             }
         }
         
-        function drawObstacles() {
-            for (const obstacle of obstacles) {
-                ctx.fillStyle = obstacle.color;
-                ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+        // Desenhar jogador (coração pixelado)
+        function drawPlayer() {
+            // Efeito de invulnerabilidade (piscar)
+            if (!player.invulnerable || Math.floor(Date.now() / 100) % 2 === 0) {
+                drawPixelatedSprite(
+                    player.heartSprite,
+                    player.x,
+                    player.y,
+                    player.width,
+                    player.height,
+                    player.color
+                );
+            }
+        }
+        
+        // Desenhar plataforma (apenas o chão)
+        function drawPlatforms() {
+            ctx.fillStyle = platforms[0].color;
+            ctx.fillRect(platforms[0].x, platforms[0].y, platforms[0].width, platforms[0].height);
+        }
+        
+        // Desenhar fêmures
+        function drawFemurs() {
+            for (const femur of femurs) {
+                // Desenhar haste do fêmur
+                drawPixelatedSprite(
+                    femur.femurSprite,
+                    femur.x,
+                    femur.y,
+                    femur.width,
+                    femur.height,
+                    femur.color
+                );
+                
+                // Desenhar cabeça do fêmur
+                drawPixelatedSprite(
+                    femur.femurHeadSprite,
+                    femur.x - 10,
+                    femur.y + femur.height - 20,
+                    60,
+                    20,
+                    femur.color
+                );
+            }
+        }
+        
+        // Desenhar Gaster Blasters (caveiras)
+        function drawGasterBlasters() {
+            for (const blaster of gasterBlasters) {
+                // Desenhar blaster (usar sprite de fogo quando estiver atirando)
+                const sprite = blaster.firing ? blaster.firingSprite : blaster.blasterSprite;
+                drawPixelatedSprite(
+                    sprite,
+                    blaster.x,
+                    blaster.y,
+                    blaster.width,
+                    blaster.height,
+                    '#ffffff'
+                );
+                
+                // Efeito de carregamento (olhos brilhantes)
+                if (blaster.charging) {
+                    const chargeProgress = 1 - (blaster.chargeTime / 60);
+                    
+                    // Olhos esquerdo
+                    ctx.fillStyle = `rgba(0, 255, 255, ${0.5 + chargeProgress * 0.5})`;
+                    ctx.fillRect(
+                        blaster.x + blaster.width * 0.3,
+                        blaster.y + blaster.height * 0.3,
+                        blaster.width * 0.1,
+                        blaster.height * 0.1
+                    );
+                    
+                    // Olho direito
+                    ctx.fillRect(
+                        blaster.x + blaster.width * 0.6,
+                        blaster.y + blaster.height * 0.3,
+                        blaster.width * 0.1,
+                        blaster.height * 0.1
+                    );
+                }
+            }
+        }
+        
+        // Desenhar jatos azuis longos
+        function drawBlueBlasts() {
+            for (const blast of blueBlasts) {
+                ctx.save();
+                ctx.translate(blast.x, blast.y);
+                ctx.rotate(blast.angle);
+                
+                // Corpo do jato
+                const gradient = ctx.createLinearGradient(0, 0, blast.length, 0);
+                gradient.addColorStop(0, 'rgba(0, 255, 255, 0.9)');
+                gradient.addColorStop(0.7, 'rgba(0, 200, 255, 0.6)');
+                gradient.addColorStop(1, 'rgba(0, 150, 255, 0.3)');
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, -blast.width/2, blast.length, blast.width);
+                
+                // Núcleo do jato
+                ctx.fillStyle = '#00ffff';
+                ctx.fillRect(0, -blast.width/4, blast.length, blast.width/2);
+                
+                // Ponta do jato (cabeça do raio)
+                ctx.beginPath();
+                ctx.arc(0, 0, blast.width/2, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Detalhes do raio
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+                ctx.lineWidth = 2;
+                for (let i = 0; i < 3; i++) {
+                    ctx.beginPath();
+                    ctx.moveTo(0, -blast.width/3 + i * blast.width/3);
+                    ctx.lineTo(blast.length, -blast.width/3 + i * blast.width/3);
+                    ctx.stroke();
+                }
+                
+                ctx.restore();
             }
         }
         
