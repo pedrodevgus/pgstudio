@@ -110,14 +110,17 @@
     <audio id="damageSound" preload="auto">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-8-bit-lose-2031.mp3" type="audio/mpeg">
     </audio>
-    <audio id="jumpSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3" type="audio/mpeg">
+    <audio id="gasterBlastSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-laser-weapon-shot-1680.mp3" type="audio/mpeg">
     </audio>
     <audio id="winSound" preload="auto">
-        <source src="https://assets.mixkit.co/sfx/preview/mixkit-winning-chimes-2015.mp3" type="audio/mpeg">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-unlock-game-notification-253.mp3" type="audio/mpeg">
     </audio>
     <audio id="gameOverSound" preload="auto">
         <source src="https://assets.mixkit.co/sfx/preview/mixkit-arcade-retro-game-over-213.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="jumpSound" preload="auto">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-quick-jump-arcade-game-239.mp3" type="audio/mpeg">
     </audio>
     
     <div id="score">Pontuação: 0</div>
@@ -130,6 +133,7 @@
         <h1>Jogo do Coração Pixelado</h1>
         <p>Use as setas para mover e a barra de espaço para pular</p>
         <p>Cuidado com os ossos e jatos azuis - eles causam dano e veneno!</p>
+        <p>Objetivo: 500 pontos</p>
         <button id="startButton">Começar Jogo</button><br>
 
         <div>
@@ -140,7 +144,7 @@
     <div id="winScreen">
         <h1>Você Venceu!</h1>
         <div id="skullAnimation"></div>
-        <p>Você atingiu 5000 pontos!</p>
+        <p>Você atingiu 500 pontos!</p>
         <button id="restartButton">Jogar Novamente</button><br>
         
         <div>
@@ -162,9 +166,10 @@
         
         // Elementos de áudio
         const damageSound = document.getElementById('damageSound');
-        const jumpSound = document.getElementById('jumpSound');
+        const gasterBlastSound = document.getElementById('gasterBlastSound');
         const winSound = document.getElementById('winSound');
         const gameOverSound = document.getElementById('gameOverSound');
+        const jumpSound = document.getElementById('jumpSound');
         
         // Ajustar tamanho do canvas
         canvas.width = window.innerWidth;
@@ -346,7 +351,7 @@
         function takeDamage(amount, isPoison = false) {
             if (player.invulnerable) return;
             
-            // Tocar som de dano
+            // Tocar som de dano (CONFIRMADO)
             damageSound.currentTime = 0;
             damageSound.play();
             
@@ -478,6 +483,10 @@
             const speed = 7;
             const length = 120; // Comprimento aumentado do jato
             
+            // Tocar som do Gaster Blaster atirando (CONFIRMADO)
+            gasterBlastSound.currentTime = 0;
+            gasterBlastSound.play();
+            
             blueBlasts.push({
                 x: x,
                 y: y,
@@ -561,12 +570,12 @@
             requestAnimationFrame(gameLoop);
         }
         
-        // Vitória - jogador atingiu 5000 pontos
+        // Vitória - jogador atingiu 500 pontos
         function winGame() {
             gameRunning = false;
             winScreen.style.display = 'flex';
             
-            // Tocar som de vitória
+            // Tocar som de vitória (CONFIRMADO)
             winSound.currentTime = 0;
             winSound.play();
             
@@ -619,8 +628,8 @@
         function gameLoop() {
             if (!gameRunning) return;
             
-            // Verificar vitória
-            if (score >= 5000) {
+            // Verificar vitória (500 pontos agora)
+            if (score >= 500) {
                 winGame();
                 return;
             }
