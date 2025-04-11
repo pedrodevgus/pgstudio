@@ -67,6 +67,11 @@ body {
 
 .center {
 text-align: center;
+justify-content: center;
+}
+
+.center_2 {
+margin-left: 80px;
 }
 
 .laranja {
@@ -147,7 +152,7 @@ text-decoration: none;
     
 .texto_2 {
     padding: 10px;
-    background-color: #858585;
+    background-color: #6d6d6d;
     color: #000;
     border-radius: 10px;
     text-align: center;
@@ -157,15 +162,15 @@ text-decoration: none;
 
 .texto_2:hover {
     transition-duration: 0.3s;
-    background-color: #aaa8a8; 
-    color: #535252;  
+    background-color: #868686; 
+    color: #474646;  
     transform:translateY(0px);
     
 }
 
 .texto_4 {
     padding: 10px;
-    background-color: #858585;
+    background-color: #797979;
     color: #000;
     border-radius: 10px;
     text-align: center;
@@ -245,3 +250,4 @@ text-decoration: none;
     color: #1139f0;
     }
 /* gap */
+

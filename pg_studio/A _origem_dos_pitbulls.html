@@ -39,7 +39,7 @@
     </div>
 
     <script>
-    alert("isso é tudo ficção! nada disso ocorreu de verdade.")
+    alert("isso é tudo ficção! nada disso ocorreu de verdade, AVEMAJONSO!")
 // //         Pede o nome do usuário
 //  let nome = prompt("Olá, estou aqui para avisar que esse livro foi feito para uma pessoa aqui do grupo... e também vim pedir seu nome. Coloque seu nome inteiro (não coloque os sobrenomes)");
 
@@ -58,6 +58,15 @@
 //  } else {
 //      alert("Você não digitou seu nome. Até mais!");
 //  }
+
+    // Efeito de carregamento suave
+    document.addEventListener("DOMContentLoaded", function() {
+    document.body.style.opacity = "0";
+    setTimeout(() => {
+        document.body.style.transition = "opacity 0.5s ease";
+        document.body.style.opacity = "1";
+    }, 100);
+});
       </script>
 </body>
 </html>

@@ -71,3 +71,23 @@ body {
 .cinza_verde {
     color: #486848;
 }
+
+.pe {
+color: #ffa600;
+}
+
+.ci {
+    color: #0ed10e;
+}
+
+.al {
+    color: #ffff00;
+}
+
+.censu {
+    background-color: #000;
+    padding: 2px;
+    height: 25px;
+    color: #fff;
+    border-radius: 5px;
+}
