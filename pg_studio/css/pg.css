@@ -250,4 +250,25 @@ text-decoration: none;
     color: #1139f0;
     }
 /* gap */
+.es {
+    color: rgb(83, 8, 204);
+}
+.pe {
+    color: #926107;
+    }
+    
+    .ci {
+        color: #0c8d0c;
+    }
+    
+    .al {
+        color: #8a8a07;
+    }
+    
+    .um {
+        color: #ce2929;
+    }
 
+.dois {
+    color: #3d5f20;
+}
