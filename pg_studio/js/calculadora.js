@@ -17,21 +17,9 @@ function adicionar(valor) {
   visor.value = eval(visor.value);
   } catch (error) {
   // Se houver um erro na expressão, mostra "Erro" no visor
-  visor.value = 'Erro, atualize a página';
+  visor.value = 'Error, apague  a mensagem';
   }
   }
-
-  
-    // Efeito de carregamento suave
-    document.addEventListener("DOMContentLoaded", function() {
-      document.body.style.opacity = "0";
-      setTimeout(() => {
-          document.body.style.transition = "opacity 0.5s ease";
-          document.body.style.opacity = "1";
-      }, 100);
-  });
-
-
   
     // Efeito de carregamento suave
     document.addEventListener("DOMContentLoaded", function() {

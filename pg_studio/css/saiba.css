@@ -3,6 +3,12 @@
     background-color: rgb(212, 213, 214);
 }
 
+@media (max-width: 600px) {
+    .caixa_pc, .caixa_pc_filha, .caixa-btn_pc {
+        display: none !important;
+    }
+}
+
 .bots {
     height: 50px;
     display: flex;
@@ -15,3 +21,7 @@
     text-decoration: none;
     color:#7742da
 }
+
+@media (min-width: 601px) {
+    .caixa-btn_mob {display: none;}
+    }

@@ -5,7 +5,7 @@ body {
     justify-content: center;
     height: 100vh;
     font-family: 'Arial', sans-serif;
-    background-color: #f7f7f7;
+    background-color: #dbd3c9;
 }
 
 .game-board {
@@ -18,20 +18,20 @@ body {
 .cell {
     width: 100px;
     height: 100px;
-    background-color: #fff;
+    background-color: #f0eded;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 2em;
     color: #333;
-    border-radius: 8px;
+    border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     transition: background-color 0.3s, color 0.3s;
     cursor: pointer;
 }
 
 .cell:hover {
-    background-color: #e1e1e1;
+    background-color: #dad7d7;
 }
 
 .btn-restart {
@@ -65,4 +65,22 @@ body {
 
 .btn-restart_1:hover {
     background-color: #024d0c;
+}
+
+
+.laranja {
+    color: orange;
+}
+
+.amarelo {
+    color: rgb(201, 201, 5)
+}
+
+.azul {
+    color: #076794;
+}
+
+.verde {
+    color: rgb(39, 197, 39);
+    font-size: 25px;
 }
