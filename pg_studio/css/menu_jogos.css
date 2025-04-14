@@ -5,7 +5,7 @@ font-family: monospace;
 }
 
 @media (max-width: 600px) {
-    .caixa_pc, .caixa_pc_filha, .caixa-btn_pc {
+    .caixa_pc, .caixa-btn_pc {
         display: none !important;
     }
 
@@ -153,7 +153,7 @@ transform:translateY(0px);
 
 @media (min-width: 601px) {
     .caixa-btn_mob {
-       text-align: center;
+       display: none;
     }
 
     .caixa-pai {
