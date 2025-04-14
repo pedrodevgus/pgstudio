@@ -17,11 +17,6 @@ body {
         display: none !important;
     }
 
-    .caixa-btn_mob {
-        display: flex;
-        justify-content: center;
-    }
-
     
     .caixa-pai {
         display: flex;
@@ -98,6 +93,18 @@ margin-left: 80px;
 }
 
 
+.bolinha_1 {
+    background-color: #ffffff;
+    text-align: center;
+    padding: 0px;
+    width: 380px;
+    border-radius: 100px;
+    box-shadow: 5px 5px 5px grey;
+    margin: auto;
+    margin-top: 176px;
+    margin-right: 50px;
+}
+
 .lado {
     text-align: right;
 }
@@ -108,7 +115,7 @@ text-decoration: none;
 }
 
 .cinza_laranja {
-    color: #47570e;
+    color: #696b01;
 }
 
 .vermelho_amarelo {
@@ -235,6 +242,10 @@ text-decoration: none;
     
 @media (min-width: 601px) {
     .caixa-btn_mob {display: none;}
+    }
+
+    @media (min-width: 601px) {
+        .center_2 {margin-left: 25px;}
     }
     
     .vermelho_amarelo_centro {
