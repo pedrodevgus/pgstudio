@@ -153,7 +153,7 @@ transform:translateY(0px);
 
 @media (min-width: 601px) {
     .caixa-btn_mob {
-       display: none;
+       text-align: center;
     }
 
     .caixa-pai {
