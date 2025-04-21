@@ -82,13 +82,14 @@ margin-left: 80px;
 }
 
 .bolinha {
-    background-color: #ffffff;
-    text-align: center;
-    padding: 0px;
-    width: 1570px;
-    border-radius: 100px;
+    background-color: #ffffff4f;
+    padding: auto;
+    width: auto;
     box-shadow: 5px 5px 5px grey;
     margin: auto;
+    text-align: center;
+    justify-items: center;
+    justify-content: center;
     margin-top: 176px;
 }
 
@@ -282,4 +283,13 @@ text-decoration: none;
 
 .dois {
     color: #3d5f20;
+}
+
+.logo_pg {
+    border-radius: 20px;
+    background-color: #ffffff54;
+    font-size: 25px;
+    width: 40px;
+    height: 40px;
+    margin-left: 1545px;
 }
