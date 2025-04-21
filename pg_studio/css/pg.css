@@ -17,7 +17,6 @@ body {
         display: none !important;
     }
 
-    
     .caixa-pai {
         display: flex;
         flex-direction: column;
@@ -82,9 +81,9 @@ margin-left: 80px;
 }
 
 .bolinha {
-    background-color: #ffffff4f;
-    padding: auto;
-    width: auto;
+    background-color: #ffffff60;
+    /* padding: auto; */
+    /* width: auto; */
     box-shadow: 5px 5px 5px grey;
     margin: auto;
     text-align: center;
@@ -140,7 +139,7 @@ text-decoration: none;
 }
 
 .amarelo_1 {
-    color: rgb(201, 201, 5);
+    color: rgb(255, 255, 15);
     font-family: 20px;
 }
 
@@ -150,7 +149,7 @@ text-decoration: none;
 }
 
 .breve {
-    color: #e5ff00;
+    color: #cde405;
 }
 
 .lado_versao {
@@ -251,7 +250,11 @@ text-decoration: none;
     
     .vermelho_amarelo_centro {
     text-align: center;
-    color: #db0909;
+    color: #721717;
+    }
+
+    .vermelho {
+        color: #af0505;
     }
 
     .btn-caixa-color {
@@ -291,5 +294,12 @@ text-decoration: none;
     font-size: 25px;
     width: 40px;
     height: 40px;
-    margin-left: 1545px;
+    text-align: right;
 }
+
+ 
+#linha {
+    width: 100%;
+    border-bottom: 1px solid #504f4f;
+    margin-top: 100px;
+    }

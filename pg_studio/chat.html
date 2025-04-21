@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Chat Online</title>
+  <style>
+    /* (Cole o CSS do chat que já temos) */
+  </style>
+</head>
+<body>
+  <div id="chat">
+    <div id="mensagens"></div>
+    <input type="text" id="mensagemInput" placeholder="Digite algo...">
+    <button onclick="enviarMensagem()">Enviar</button>
+
+    <a href="../index.html">/-/voltar/-/</a>
+  </div>
+<!-- 
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script>
+    const socket = io(); // Conecta ao backend da Vercel
+    
+    // Envia mensagens
+    function enviarMensagem() {
+      const input = document.getElementById("mensagemInput");
+      const msg = input.value.trim();
+      if (msg) {
+        socket.emit("mensagem", msg);
+        input.value = "";
+      }
+    }
+    
+    // Recebe mensagens
+    socket.on("mensagem", (msg) => {
+      const div = document.createElement("div");
+      div.textContent = msg;
+      document.getElementById("mensagens").appendChild(div);
+    });
+  </script> -->
+</body>
+</html>
