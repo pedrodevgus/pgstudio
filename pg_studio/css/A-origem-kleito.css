@@ -129,6 +129,13 @@ color: #ffa600;
     font-size: 30px;
 }
 
+.kleito_div {
+    background-color: rgb(5, 113, 255);
+    height: 20px;
+    width: 20px;
+    color: rgb(5, 113, 255);
+    border-radius: 5px;
+}
 .escu_div {
     background-color: rgb(75, 4, 4);
     height: 20px;
