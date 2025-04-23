@@ -89,7 +89,6 @@ margin-left: 80px;
     text-align: center;
     justify-items: center;
     justify-content: center;
-    margin-top: 176px;
 }
 
 
@@ -294,12 +293,30 @@ text-decoration: none;
     font-size: 25px;
     width: 40px;
     height: 40px;
-    text-align: right;
+    margin-left: 1460px;
 }
 
+.logo_pg_mobile {
+    border-radius: 20px;
+    background-color: #ffffff54;
+    font-size: 25px;
+    width: 40px;
+    height: 40px;
+    margin-left: 300px;
+}
+
+@media (min-width: 601px) {
+    .caixa_pc_1, .caixa_pc_filha_1, .caixa-btn_pc_1 {
+        display: none !important;
+}
  
+}
 #linha {
     width: 100%;
     border-bottom: 1px solid #504f4f;
     margin-top: 100px;
+    }
+
+    .peq {
+font-size: xx-small;
     }
