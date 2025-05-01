@@ -4,10 +4,30 @@
 
 body{
 background-color: rgb(199, 170, 123);
-text-align: center;
 
 }
 
+h3 {
+    text-align: center;
+}
+h2 {
+    text-align: center;
+}
+h1 {
+    text-align: center;
+}
+h4 {
+    text-align: center;
+}
+h5 {
+    text-align: center;
+}
+h6 {
+    text-align: center;
+}
+p {
+    text-align: center;
+}
 .fonte {
     font-size: 15px;
 }
@@ -30,8 +50,10 @@ text-align: center;
     }
 
     .cursive {
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        color: #7a2a2a;
+        /* font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: #7a2a2a; */
+        font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        color: rgb(75, 4, 4);
     }
 
 .azul {
@@ -71,6 +93,89 @@ text-align: center;
         
     }
 
-.cinza_verde {
-    color: #486848;
-}
+
+    .espolier {
+        color: rgb(6, 93, 206);
+    }    
+    
+    
+    .cinza_verde {
+        color: #486848;
+        text-align: center;
+    }
+    
+    .pe {
+    color: #ffa600;
+    }
+    
+    .ci {
+        color: #0ed10e;
+    }
+    
+    .al {
+        color: #ffff00;
+    }
+    
+    .til_1 {
+    color: #9e0303da;
+    }
+    
+    .censu {
+        background-color: #000;
+        padding: 2px;
+        height: 25px;
+        color: #fff;
+        border-radius: 5px;
+    }
+    
+    .es {
+        color: rgb(168, 0, 168);
+    }
+    
+    .kleito_menor {
+        color: rgb(5, 113, 255);
+        font-size: 30px;
+    }
+    
+    .kleito_div {
+        background-color: rgb(5, 113, 255);
+        height: 20px;
+        width: 20px;
+        color: rgb(5, 113, 255);
+        border-radius: 5px;
+    }
+    .escu_div {
+        background-color: rgb(75, 4, 4);
+        height: 20px;
+        width: 20px;
+        color: rgb(75, 4, 4);
+        border-radius: 5px;
+    }
+    
+    .centro {
+        text-align: center
+    }
+    
+    .es_div {
+        background-color: rgb(168, 0, 168);
+        height: 20px;
+        width: 20px;
+        color: rgb(168, 0, 168);
+        border-radius:5px ;
+    }
+    
+    .baixo {
+        margin-bottom: 20px;
+    }
+    
+    
+    #linha_1 {
+        width: 100%;
+        border-bottom: 1px solid #000000;
+        margin-top: 30px;
+        }
+
+        .escu {
+            font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            color: rgb(75, 4, 4);
+        }
